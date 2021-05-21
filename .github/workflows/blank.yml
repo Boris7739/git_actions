@@ -19,6 +19,13 @@ jobs:
       - uses: actions/checout@v1 
       - name: create ZIP deploy package
         run: zip -r ${{ env.deploy_package_name }} ./ -x *.git*
+      - name: configure my AWS Credentals
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ env.AWS_region_name }}
+          
+      - name: copy deploy package
+        run: aws s3 cp ${{ env.deploy_package_name }} s3://${{ env.EB_package_s3_buket_name }}/
   my_cD_part:
     runs-on: ubuntu-latest
     needs: [my_ci_part]

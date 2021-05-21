@@ -30,8 +30,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: [my_ci_part]
     steps:   
-    - name: ggg
+    - name: configure my AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ${{ env.AWS_region_name }}
+    - name: create new EB APP
       run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+        aws elasticbeanstalk create-application-version \
+        --
 

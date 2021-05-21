@@ -1,31 +1,30 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
-
-# Controls when the action will run. 
+env:
+  EB_package_s3_buket_name: "flask-packages"
+  EB_app_name: "my-flask"
+  EB_env_name: "myFlask_env"
+  deploy_package_name: "flask_app${{ github.sha }}.zip"
+  AWS_region_name: "rus"
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  job_one:
-  # This workflow contains a single job called "build"
-    # The type of runner that the job will run on
+  my_ci_part:
     runs-on: ubuntu-latest
-
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-  job_two:
+      - name: Git clone repo
+      - uses: actions/checout@v1 
+      - name: create ZIP deploy package
+        run: zip -r ${{ env.deploy_package_name }} ./ -x *.git*
+  my_cD_part:
     runs-on: ubuntu-latest
-    needs: [job_one]
+    needs: [my_ci_part]
     steps:   
     - name: ggg
       run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
